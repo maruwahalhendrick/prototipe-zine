@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ilusi 7 Tahun: Jurnal Bintang</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,6 +19,12 @@
             --accent-color: #a78bfa;
         }
 
+        html, body {
+            height: 100%;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -29,10 +35,18 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: 100dvh;
+            height: 100dvh;
             /* Prevent body scroll on mobile */
             overflow: hidden; 
             perspective: 1500px;
             -webkit-tap-highlight-color: transparent;
+            /* Safe area insets for iPhone home gesture indicator and dynamic mobile UI */
+            padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
+            padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+            padding-left: max(0.5rem, env(safe-area-inset-left, 0px));
+            padding-right: max(0.5rem, env(safe-area-inset-right, 0px));
+            box-sizing: border-box;
         }
 
         /* Starry background effect */
@@ -79,12 +93,14 @@
         /* Mobile-First Single Page Container */
         .zine-container {
             position: relative;
-            width: 90vw;
-            max-width: 480px; /* Lebar optimal untuk keterbacaan teks */
-            height: 88vh;
-            max-height: 800px;
+            width: min(92vw, 480px);
+            /* Clearance optimal agar tidak mentok bar navigasi browser mobile */
+            height: 82vh;
+            height: calc(100dvh - 3.25rem - env(safe-area-inset-bottom, 0px) - env(safe-area-inset-top, 0px));
+            max-height: 760px;
             perspective: 2000px;
             z-index: 10;
+            margin: auto;
         }
 
         /* Individual Pages */
@@ -92,13 +108,13 @@
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: linear-gradient(145deg, rgba(30,30,45,0.95) 0%, rgba(15,15,25,0.95) 100%);
+            background: linear-gradient(145deg, rgba(30,30,45,0.96) 0%, rgba(15,15,25,0.98) 100%);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(167, 139, 250, 0.05);
             border-radius: 16px;
-            padding: 2.5rem 1.5rem;
+            padding: 1.75rem 1.25rem 0.75rem 1.25rem;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
@@ -106,10 +122,12 @@
             transition: transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.8s ease;
             backface-visibility: hidden;
             scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            box-sizing: border-box;
         }
 
         @media (min-width: 640px) {
-            .zine-page { padding: 3rem 2.5rem; }
+            .zine-page { padding: 2.75rem 2.25rem 1.5rem 2.25rem; }
         }
 
         /* Page Turn Animation */
@@ -166,6 +184,20 @@
             transform: translateY(-2px);
         }
 
+        /* Bottom Navigation Bar inside pages */
+        .page-nav-bar {
+            margin-top: auto;
+            padding-top: 1rem;
+            padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(15, 15, 25, 0.98) 75%, rgba(15, 15, 25, 0) 100%);
+            z-index: 20;
+        }
+
         /* Overlay Cover (Pre-interaction) */
         #enter-screen {
             position: fixed;
@@ -177,6 +209,7 @@
             justify-content: center;
             align-items: center;
             padding: 2rem;
+            padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
             transition: opacity 1.5s ease;
         }
 
@@ -249,7 +282,7 @@
                     </p>
                 </div>
                 
-                <div class="mt-auto pt-6 flex w-full justify-center">
+                <div class="mt-auto pt-6 pb-2 flex w-full justify-center">
                     <button class="nav-btn" onclick="nextPage(1)">Buka Kisah <span>⇾</span></button>
                 </div>
             </div>
@@ -261,7 +294,7 @@
                 <h2 class="heading-font text-2xl font-semibold mb-2 glowing-text border-b border-indigo-900/50 pb-3 text-indigo-100">Bab I: Awal yang Semu</h2>
                 <p class="handwriting text-xl mb-6 text-indigo-300">Menyelam terlampau dalam...</p>
                 
-                <div class="flex-grow">
+                <div class="flex-grow pb-6">
                     <div class="flex justify-center mb-6">
                         <!-- SVG: Seed of Illusion (Sprout) -->
                         <svg width="80" height="80" viewBox="0 0 100 100" class="svg-glow pulsing">
@@ -282,7 +315,7 @@
                     </p>
                 </div>
 
-                <div class="mt-auto pt-6 flex w-full justify-between sticky bottom-0 bg-gradient-to-t from-[#12121c] to-transparent">
+                <div class="page-nav-bar">
                     <button class="nav-btn" onclick="prevPage(2)">⇽</button>
                     <button class="nav-btn" onclick="nextPage(2)">Lanjut ⇾</button>
                 </div>
@@ -293,7 +326,7 @@
         <div class="zine-page" id="page3" style="z-index: 4;">
             <div class="flex flex-col h-full">
                 <h2 class="heading-font text-2xl font-semibold mb-2 glowing-text border-b border-indigo-900/50 pb-3 text-indigo-100">Bab II: Sangkar Kaca</h2>
-                <div class="flex-grow mt-4">
+                <div class="flex-grow mt-4 pb-6">
                     <p class="paragraph-text">
                         Tawamu yang ramah kuterjemahkan sebagai penerimaan yang eksklusif. Sikap fleksibelmu yang menghindari konflik kuartikan sebagai ketaatan pada cinta yang kubangun. 
                     </p>
@@ -319,7 +352,7 @@
                     </p>
                 </div>
 
-                <div class="mt-auto pt-6 flex w-full justify-between sticky bottom-0 bg-gradient-to-t from-[#12121c] to-transparent">
+                <div class="page-nav-bar">
                      <button class="nav-btn" onclick="prevPage(3)">⇽</button>
                      <button class="nav-btn" onclick="nextPage(3)">Lanjut ⇾</button>
                 </div>
@@ -330,7 +363,7 @@
         <div class="zine-page" id="page4" style="z-index: 3;">
             <div class="flex flex-col h-full">
                 <h2 class="heading-font text-2xl font-semibold mb-2 glowing-text border-b border-indigo-900/50 pb-3 text-indigo-100">Bab III: Udara yang Tercekik</h2>
-                <div class="flex-grow mt-4">
+                <div class="flex-grow mt-4 pb-6">
                     <p class="paragraph-text">
                         Kenyataannya, kita hanyalah perahu karam di perairan sunyi. Engkau, sang Udara yang memuja kebebasan, memendam rasa <span class="text-rose-300 font-medium">terlalu welas asih untuk melukai.</span> 
                     </p>
@@ -352,7 +385,7 @@
                     </p>
                 </div>
 
-                <div class="mt-auto pt-6 flex w-full justify-between sticky bottom-0 bg-gradient-to-t from-[#12121c] to-transparent">
+                <div class="page-nav-bar">
                      <button class="nav-btn" onclick="prevPage(4)">⇽</button>
                      <button class="nav-btn" onclick="nextPage(4)">Lanjut ⇾</button>
                 </div>
@@ -363,7 +396,7 @@
         <div class="zine-page" id="page5" style="z-index: 2;">
             <div class="flex flex-col h-full">
                 <h2 class="heading-font text-2xl font-semibold mb-2 glowing-text border-b border-indigo-900/50 pb-3 text-indigo-100">Bab IV: Tamparan Realita</h2>
-                <div class="flex-grow mt-4">
+                <div class="flex-grow mt-4 pb-6">
                     
                     <div class="flex justify-center mb-6">
                         <!-- SVG: Broken String / Mirror -->
@@ -391,7 +424,7 @@
                     </p>
                 </div>
 
-                <div class="mt-auto pt-6 flex w-full justify-between sticky bottom-0 bg-gradient-to-t from-[#12121c] to-transparent">
+                <div class="page-nav-bar">
                      <button class="nav-btn" onclick="prevPage(5)">⇽</button>
                      <button class="nav-btn" onclick="nextPage(5)">Akhir Kisah ⇾</button>
                 </div>
@@ -403,7 +436,7 @@
             <div class="flex flex-col h-full items-center text-center">
                 <h2 class="heading-font text-2xl font-semibold mb-4 glowing-text border-b border-indigo-900/50 pb-3 w-full text-left text-indigo-100">Epilog: Melarungkan</h2>
                 
-                <div class="flex-grow flex flex-col items-center w-full mt-2">
+                <div class="flex-grow flex flex-col items-center w-full mt-2 pb-6">
                     <!-- SVG Paper Boat -->
                     <div class="my-6 floating">
                         <svg width="120" height="90" viewBox="0 0 100 100" class="svg-glow">
@@ -434,7 +467,7 @@
                     </div>
                 </div>
                 
-                <div class="mt-8 pt-4 flex w-full justify-start sticky bottom-0 bg-gradient-to-t from-[#12121c] to-transparent">
+                <div class="page-nav-bar justify-start">
                     <button class="nav-btn" onclick="prevPage(6)">⇽ Halaman Sebelumnya</button>
                 </div>
             </div>
